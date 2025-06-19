@@ -9,3 +9,5 @@ fastapi
 uvicorn
 pydantic
 prometheus-fastapi-instrumentator
+streamlit
+requests
