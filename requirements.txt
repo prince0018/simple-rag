@@ -1,0 +1,10 @@
+langchain 
+langchain-community 
+faiss-cpu 
+tiktoken
+openai 
+python-dotenv  # dotenv is optional but handy
+langchain-openai
+fastapi
+uvicorn
+pydantic
