@@ -1,12 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import router
+from prometheus_fastapi_instrumentator import Instrumentator
+
+
 
 app = FastAPI(
     title="Simple RAG API",
     description="A simple RAG (Retrieval-Augmented Generation) API using LangChain and OpenAI",
     version="1.0.0"
 )
+
+#  Add Prometheus instrumentation
+Instrumentator().instrument(app).expose(app)
 
 # Add CORS middleware for frontend integration
 app.add_middleware(

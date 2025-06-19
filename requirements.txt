@@ -8,3 +8,4 @@ langchain-openai
 fastapi
 uvicorn
 pydantic
+prometheus-fastapi-instrumentator

@@ -64,6 +64,7 @@ def health():
 
 @router.get("/chat-history")
 def get_chat_history():
+ 
     """Get the current chat history"""
     return {"chat_history": chat_history}
 
