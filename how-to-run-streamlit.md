@@ -1,43 +1,77 @@
-# 🚀 How to Run the Streamlit Frontend (rag-ui)
+# 🚀 How to Run the Full RAG Application (Backend + Frontend)
 
-This guide explains how to build and run the Streamlit-based frontend (`rag-ui`) for the RAG application using Docker.
+This guide walks you through the full setup for running both the FastAPI backend and Streamlit frontend using Docker.
 
 ---
 
 ## ✅ Prerequisites
 
 - Docker installed: https://docs.docker.com/get-docker/
-- Backend (FastAPI) already running on `http://host.docker.internal:8000/query`
-- `.env` file present in the root of the project with required keys (e.g., `OPENAI_API_KEY`)
+- `.env` file with your OpenAI key (or clone from repo if already included)
 
 ---
 
-## 📁 Assumed Directory Structure
+## 📁 Project Structure
 
 ```
 simple-rag/
 ├── .env
-├── streamlit_app/
-│   ├── Dockerfile
-│   ├── app.py
-│   └── requirements.txt
+├── Dockerfile             # ⬅️ Backend (FastAPI)
+├── main.py                # ⬅️ Backend entry point
+├── requirements.txt       # ⬅️ Backend dependencies
+└── streamlit_app/
+    ├── Dockerfile         # ⬅️ Frontend (Streamlit)
+    ├── app.py
+    └── requirements.txt
 ```
 
 ---
 
-## 🏗 Step 1: Build the Streamlit Docker Image
+## 🧾 Step 1: Clone the Repository
 
-From the **project root** (`simple-rag/`), run:
+```bash
+git clone https://github.com/your-username/simple-rag.git
+cd simple-rag
+```
+
+Make sure you have a `.env` file in the root directory with your OpenAI API key:
+
+```env
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+---
+
+## 🛠 Step 2: Build and Run the Backend (FastAPI)
+
+### 🔨 Build Backend Image
+
+```bash
+docker build -t rag-api-image .
+```
+
+### 🚀 Run Backend Container
+
+```bash
+docker run -d -p 8000:8000 \
+  --name rag-api \
+  --env-file .env \
+  rag-api-image
+```
+
+🔗 Check if backend is running: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+## 🎨 Step 3: Build and Run the Frontend (Streamlit)
+
+### 🔨 Build Frontend Image
 
 ```bash
 docker build -t rag-ui-image -f streamlit_app/Dockerfile streamlit_app
 ```
 
-This will create a Docker image with Streamlit and your app code.
-
----
-
-## 🚀 Step 2: Run the Container
+### 🚀 Run Frontend Container
 
 ```bash
 docker run -d -p 8501:8501 \
@@ -47,44 +81,26 @@ docker run -d -p 8501:8501 \
   rag-ui-image
 ```
 
-- `--env-file .env`: Loads environment variables (like OpenAI API key, if used by Streamlit).
-- `RAG_API_URL`: The endpoint where Streamlit will send requests (served by the FastAPI backend).
+🔗 Open in browser: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-## 🌐 Step 3: Open the Frontend
+## 🛑 Cleanup Commands
 
-Visit in your browser:  
-👉 [http://localhost:8501](http://localhost:8501)
-
----
-
-## 🛑 Cleanup (Optional)
-
-To stop and remove the container:
+### Remove containers
 
 ```bash
-docker rm -f rag-ui
+docker rm -f rag-api rag-ui
 ```
 
-To remove the image:
+### Remove images
 
 ```bash
-docker rmi rag-ui-image
+docker rmi -f rag-api-image rag-ui-image
 ```
 
 ---
 
-## 💡 Tip
+## ✅ You're All Set!
 
-If you make changes to `app.py` or `requirements.txt`, rebuild the image before running:
-
-```bash
-docker build -t rag-ui-image -f streamlit_app/Dockerfile streamlit_app
-```
-
----
-
-## ✅ That’s it!
-
-Your Streamlit frontend is now running in Docker and communicating with the backend RAG API.
+You now have both backend and frontend running with Docker. Happy building!
